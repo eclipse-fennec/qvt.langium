@@ -1,0 +1,12 @@
+{
+  "projectName": "QvtoLangium",
+  "languages": [
+    {
+      "id": "qvto",
+      "grammar": "src/grammar/qvto.langium",
+      "fileExtensions": [".qvto"],
+      "textMate": { "out": "syntaxes/qvto.tmLanguage.json" }
+    }
+  ],
+  "out": "src/generated"
+}

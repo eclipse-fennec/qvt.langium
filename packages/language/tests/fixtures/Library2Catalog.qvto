@@ -1,0 +1,40 @@
+/*
+ * ******************************************************************
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Data In Motion Consulting - initial implementation
+ * ******************************************************************
+ */
+-- Library → Catalog: an imported helper library, a guarded mapping, and ordering —
+-- deliberately more than the minimal case (#206).
+modeltype LIB uses 'http://example.org/fennec/m2x/library/1.0';
+modeltype CAT uses 'http://example.org/fennec/m2x/catalog/1.0';
+
+import catalog.Format;
+
+transformation Library2Catalog(in lib : LIB, out cat : CAT) {
+
+    main() {
+        lib.objectsOfType(Library)->map toCatalog();
+    }
+
+    mapping Library::toCatalog() : Catalog {
+        title := self.name;
+        entries := self.books->sortedBy(b | b.year)->map toEntry();
+    }
+
+    -- the when-guard below is enough: a guarded-out mapping contributes nothing to the
+    -- mapped collection (xcollect semantics, QVT v1.3 §8.2.2.7 — pinned by #228)
+    mapping Book::toEntry() : Entry
+        when { self.copies > 0 } {
+        label := formatLabel(self.title, self.author);
+        year := self.year;
+    }
+}

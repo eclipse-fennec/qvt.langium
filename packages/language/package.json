@@ -1,0 +1,29 @@
+{
+  "name": "@emfts/qvto.langium",
+  "version": "0.0.1-next.1",
+  "description": "Langium-based QVT Operational parser with LSP support for EMFTS: transformations, libraries, mappings and OCL expressions, validated against EMF metamodels",
+  "license": "EPL-2.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "files": ["dist", "syntaxes"],
+  "scripts": {
+    "langium:generate": "langium generate",
+    "build": "npm run langium:generate && tsc",
+    "watch": "tsc --watch",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@emfts/core": "0.3.0-next.1",
+    "langium": "^3.5.0",
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.12"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "langium-cli": "^3.5.0",
+    "typescript": "~5.9.2",
+    "vitest": "^3.2.4"
+  }
+}

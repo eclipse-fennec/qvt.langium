@@ -1,0 +1,20 @@
+{
+  "name": "qvto-langium",
+  "private": true,
+  "version": "0.0.1-next.1",
+  "description": "QVT Operational in Langium: parser, validation, completion and hover for EMFTS, and the language server as a Web Worker",
+  "license": "EPL-2.0",
+  "type": "module",
+  "workspaces": ["packages/language", "packages/lsp-worker"],
+  "scripts": {
+    "build": "npm run build -w packages/language && npm run build -w packages/lsp-worker",
+    "generate": "npm run langium:generate -w packages/language",
+    "test": "vitest run --root packages/language",
+    "type-check": "tsc -p packages/language --noEmit && tsc -p packages/lsp-worker --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.2",
+    "vitest": "^3.2.4"
+  },
+  "engines": { "node": ">=22" }
+}

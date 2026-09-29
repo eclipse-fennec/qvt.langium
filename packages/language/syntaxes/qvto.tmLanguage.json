@@ -1,0 +1,81 @@
+{
+  "name": "qvto",
+  "scopeName": "source.qvto",
+  "fileTypes": [
+    ".qvto"
+  ],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "name": "keyword.control.qvto",
+      "match": "\\b(Bag|Collection|Dict|List|OrderedSet|Sequence|Set|Tuple|abstract|access|and|assert|configuration|constructor|disjuncts|div|else|end|endif|error|extends|false|fatal|forEach|forOne|helper|if|implies|import|in|inherits|init|inout|invalid|invresolve|invresolveIn|invresolveone|invresolveoneIn|late|let|library|log|main|map|mapping|merges|mod|modeltype|new|not|null|object|or|out|property|query|resolve|resolveIn|resolveone|resolveoneIn|result|return|self|then|transformation|true|uses|var|warning|when|where|while|with|xmap|xor)\\b"
+    },
+    {
+      "name": "string.quoted.single.qvto",
+      "begin": "'",
+      "end": "'",
+      "patterns": [
+        {
+          "include": "#string-character-escape"
+        }
+      ]
+    },
+    {
+      "name": "string.quoted.double.qvto",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "include": "#string-character-escape"
+        }
+      ]
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.block.qvto",
+          "begin": "/\\*",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.qvto"
+            }
+          },
+          "end": "\\*/",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.qvto"
+            }
+          }
+        },
+        {
+          "begin": "--",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.whitespace.comment.leading.qvto"
+            }
+          },
+          "end": "(?=$)",
+          "name": "comment.line.qvto"
+        },
+        {
+          "begin": "//",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.whitespace.comment.leading.qvto"
+            }
+          },
+          "end": "(?=$)",
+          "name": "comment.line.qvto"
+        }
+      ]
+    },
+    "string-character-escape": {
+      "name": "constant.character.escape.qvto",
+      "match": "\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4}|u\\{[0-9A-Fa-f]+\\}|[0-2][0-7]{0,2}|3[0-6][0-7]?|37[0-7]?|[4-7][0-7]?|.|$)"
+    }
+  }
+}

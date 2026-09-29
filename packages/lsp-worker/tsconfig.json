@@ -1,0 +1,5 @@
+{
+  "extends": "../language/tsconfig.json",
+  "compilerOptions": { "outDir": "./dist", "rootDir": "./src", "lib": ["ES2022", "WebWorker"] },
+  "include": ["src/**/*"]
+}

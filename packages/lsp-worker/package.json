@@ -1,0 +1,19 @@
+{
+  "name": "@emfts/qvto.lsp.worker",
+  "version": "0.0.1-next.1",
+  "description": "Web Worker language server for QVT Operational (qvto.langium) — for Monaco, CodeMirror or any LSP client in the browser",
+  "license": "EPL-2.0",
+  "type": "module",
+  "main": "dist/worker.js",
+  "types": "dist/worker.d.ts",
+  "exports": { ".": { "types": "./dist/worker.d.ts", "import": "./dist/worker.js" } },
+  "files": ["dist"],
+  "scripts": { "build": "tsc", "watch": "tsc --watch" },
+  "dependencies": {
+    "@emfts/core": "0.3.0-next.1",
+    "@emfts/qvto.langium": "0.0.1-next.1",
+    "langium": "^3.5.0",
+    "vscode-languageserver": "^9.0.1"
+  },
+  "devDependencies": { "typescript": "~5.9.2" }
+}
