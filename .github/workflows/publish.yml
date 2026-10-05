@@ -1,0 +1,58 @@
+name: Publish to npm
+
+# Two packages from one release: @emfts/qvto.langium and @emfts/qvto.lsp.worker,
+# both with the version of the tag; the worker depends on exactly that version
+# of the language, so the language goes out first.
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - name: Determine npm tag
+        id: npm-tag
+        run: |
+          if [[ "${GITHUB_REF_NAME}" == *"-"* ]]; then
+            echo "tag=next" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Installed against the lockfile as committed — the versions are set afterwards
+      - name: Install dependencies
+        run: npm ci
+
+      # `npm pkg set` rather than `npm version`: the latter reinstalls, and in a workspace the
+      # worker would then look for the not yet published language version in the registry
+      - name: Set version from tag
+        run: |
+          npm pkg set "version=${GITHUB_REF_NAME}" -w packages/language -w packages/lsp-worker
+          npm pkg set "dependencies.@emfts/qvto.langium=${GITHUB_REF_NAME}" -w packages/lsp-worker
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm run test:run
+
+      - name: Publish @emfts/qvto.langium
+        run: npm publish -w packages/language --provenance --tag ${{ steps.npm-tag.outputs.tag }} --access public
+
+      - name: Publish @emfts/qvto.lsp.worker
+        run: npm publish -w packages/lsp-worker --provenance --tag ${{ steps.npm-tag.outputs.tag }} --access public

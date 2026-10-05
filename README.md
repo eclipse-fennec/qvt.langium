@@ -1,4 +1,4 @@
-# qvto-langium
+# qvt.langium
 
 QVT Operational (QVT-O) als Langium-Sprache für EMFTS: Parser, Validierung,
 Vervollständigung und Hover gegen EMF-Metamodelle, und der Language Server als

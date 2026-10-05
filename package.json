@@ -5,16 +5,26 @@
   "description": "QVT Operational in Langium: parser, validation, completion and hover for EMFTS, and the language server as a Web Worker",
   "license": "EPL-2.0",
   "type": "module",
-  "workspaces": ["packages/language", "packages/lsp-worker"],
+  "workspaces": [
+    "packages/language",
+    "packages/lsp-worker"
+  ],
   "scripts": {
     "build": "npm run build -w packages/language && npm run build -w packages/lsp-worker",
     "generate": "npm run langium:generate -w packages/language",
     "test": "vitest run --root packages/language",
-    "type-check": "tsc -p packages/language --noEmit && tsc -p packages/lsp-worker --noEmit"
+    "type-check": "tsc -p packages/language --noEmit && tsc -p packages/lsp-worker --noEmit",
+    "test:run": "vitest run --root packages/language"
   },
   "devDependencies": {
     "typescript": "~5.9.2",
     "vitest": "^3.2.4"
   },
-  "engines": { "node": ">=22" }
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eclipse-fennec/qvt.langium.git"
+  }
 }

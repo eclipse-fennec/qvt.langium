@@ -3,6 +3,11 @@
   "version": "0.0.1-next.1",
   "description": "Web Worker language server for QVT Operational (qvto.langium) — for Monaco, CodeMirror or any LSP client in the browser",
   "license": "EPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eclipse-fennec/qvt.langium.git",
+    "directory": "packages/lsp-worker"
+  },
   "type": "module",
   "main": "dist/worker.js",
   "module": "dist/worker.js",
