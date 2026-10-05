@@ -1,5 +1,5 @@
 {
-  "name": "qvto-langium",
+  "name": "qvt-langium",
   "private": true,
   "version": "0.0.1-next.1",
   "description": "QVT Operational in Langium: parser, validation, completion and hover for EMFTS, and the language server as a Web Worker",

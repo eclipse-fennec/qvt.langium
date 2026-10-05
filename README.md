@@ -12,8 +12,8 @@ OCL-Worker anbindet, bindet diesen genauso an.
 
 | Paket | Inhalt |
 |---|---|
-| `packages/language` — `@emfts/qvto.langium` | Grammatik (`src/grammar/qvto.langium`), Dienste (`src/language`), Parser-Einstieg (`parseQvto`), TextMate-Grammatik (`syntaxes/`) |
-| `packages/lsp-worker` — `@emfts/qvto.lsp.worker` | Der Language Server als Web Worker (`dist/worker.js`) |
+| `packages/language` — `@emfts/qvt.langium` | Grammatik (`src/grammar/qvto.langium`), Dienste (`src/language`), Parser-Einstieg (`parseQvto`), TextMate-Grammatik (`syntaxes/`) |
+| `packages/lsp-worker` — `@emfts/qvt.lsp.worker` | Der Language Server als Web Worker (`dist/worker.js`) |
 
 ## Was die Sprache abdeckt
 
@@ -53,7 +53,7 @@ mit ihren nsURIs.
 ## Benutzen
 
 ```ts
-import { parseQvto, services } from '@emfts/qvto.langium';
+import { parseQvto, services } from '@emfts/qvt.langium';
 
 services().qvto.emfBridge.registerPackage(libraryPackage); // ein EPackage aus @emfts/core
 const { unit, findings, hasErrors } = await parseQvto(text);
@@ -63,7 +63,7 @@ Im Browser läuft der Worker als Language Server; Metamodelle kommen als
 LSP-Notification hinein:
 
 ```ts
-const worker = new Worker(new URL('@emfts/qvto.lsp.worker', import.meta.url), { type: 'module' });
+const worker = new Worker(new URL('@emfts/qvt.lsp.worker', import.meta.url), { type: 'module' });
 // LSP über den Message-Port, z. B. mit @codemirror/lsp-client oder monaco-languageclient, dann:
 client.notification('emfts/registerPackage', { xmi: ecoreXmi });
 client.notification('emfts/unregisterPackage', { nsURI });

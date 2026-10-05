@@ -16,7 +16,7 @@
 import { EmptyFileSystem } from 'langium';
 import { startLanguageServer } from 'langium/lsp';
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser.js';
-import { createQvtoLspServices } from '@emfts/qvto.langium';
+import { createQvtoLspServices } from '@emfts/qvt.langium';
 import { BasicResourceSet, URI, XMIResourceFactory, registerEcorePackage, type EPackage, type XMIResource } from '@emfts/core';
 
 declare const self: DedicatedWorkerGlobalScope;

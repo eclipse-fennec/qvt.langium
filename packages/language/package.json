@@ -1,5 +1,5 @@
 {
-  "name": "@emfts/qvto.langium",
+  "name": "@emfts/qvt.langium",
   "version": "0.0.1-next.1",
   "description": "Langium-based QVT Operational parser with LSP support for EMFTS: transformations, libraries, mappings and OCL expressions, validated against EMF metamodels",
   "license": "EPL-2.0",

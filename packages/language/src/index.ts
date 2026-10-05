@@ -4,7 +4,7 @@
  * validation, completion and hover against EMF metamodels.
  *
  * Parse headlessly with `parseQvto`, or run the language server from
- * `@emfts/qvto.lsp.worker` in the browser.
+ * `@emfts/qvt.lsp.worker` in the browser.
  */
 export { createQvtoServices, createQvtoLspServices } from './language/qvto-module.js';
 export type { QvtoServices, QvtoSharedServices, QvtoAddedServices } from './language/qvto-module.js';
