@@ -16,6 +16,21 @@ describe('Vervollständigung', () => {
     qvto.emfBridge.registerPackage(loadEcore('catalog.ecore'));
   });
 
+  it('bietet die nsURIs der registrierten Modelle nach uses an, mit und ohne begonnenes Anführungszeichen', async () => {
+    await completion({ text: `modeltype LIB uses <|>`, index: 0, assert: (list) => {
+      const labels = list.items.map((i) => i.label);
+      expect(labels).toContain(`'http://example.org/fennec/m2x/library/1.0'`);
+      expect(labels).toContain(`'http://example.org/fennec/m2x/catalog/1.0'`);
+      expect(list.items.find((i) => i.label.includes('library'))?.detail).toBe('library');
+    } });
+    await completion({ text: `modeltype LIB uses 'http://example.org/fennec/m2x/lib<|>`, index: 0, assert: (list) => {
+      const item = list.items.find((i) => i.label === `'http://example.org/fennec/m2x/library/1.0'`);
+      expect(item).toBeDefined();
+      // the proposal replaces from the opening quote on
+      expect(item?.textEdit && 'range' in item.textEdit ? item.textEdit.range.start.character : -1).toBe('modeltype LIB uses '.length);
+    } });
+  });
+
   it('bietet die deklarierten modeltypes nach in/out an', async () => {
     await completion({ text: `modeltype LIB uses 'urn:lib';\nmodeltype CAT uses 'urn:cat';\ntransformation T(in lib : <|>`, index: 0, assert: (list) => {
       const labels = list.items.map((i) => i.label);

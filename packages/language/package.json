@@ -15,7 +15,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@emfts/core": "0.3.0-next.1",
+    "@emfts/core": "0.3.0-next.4",
     "langium": "^3.5.0",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.12"

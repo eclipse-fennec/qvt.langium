@@ -4,7 +4,8 @@
  * mappings and helpers of the unit, classes of the registered packages, and
  * after a dot the features of a class that can be told from the text.
  */
-import { type AstNode, type MaybePromise, AstUtils, GrammarAST } from 'langium';
+import { type AstNode, type LangiumDocument, type MaybePromise, AstUtils, GrammarAST } from 'langium';
+import type { Position } from 'vscode-languageserver';
 import { DefaultCompletionProvider, type CompletionAcceptor, type CompletionContext, type LangiumServices, type NextFeature } from 'langium/lsp';
 import { CompletionItemKind } from 'vscode-languageserver';
 import type { QvtoServices } from './qvto-module.js';
@@ -18,6 +19,25 @@ export class QvtoCompletionProvider extends DefaultCompletionProvider {
   constructor(services: QvtoServices) {
     super(services as unknown as LangiumServices);
     this.bridge = services.emfBridge;
+  }
+
+  /**
+   * Inside a string that is not closed yet — `uses 'http://ex` — the lexer
+   * fails and the default finds no feature to complete. The text up to the
+   * opening quote parses, so that is where the expected feature is read, and
+   * the quote's offset is where a proposal replaces from: the nsURI proposals
+   * therefore carry their quotes.
+   */
+  protected override *buildContexts(document: LangiumDocument, position: Position): IterableIterator<CompletionContext> {
+    const textDocument = document.textDocument;
+    const offset = textDocument.offsetAt(position);
+    const before = textDocument.getText().slice(0, offset);
+    const open = /(['"])[^'"\n]*$/.exec(before);
+    if (open) {
+      const quoteOffset = open.index;
+      yield { document, textDocument, offset, position, tokenOffset: quoteOffset, tokenEndOffset: offset, features: this.findFeaturesAt(textDocument, quoteOffset) };
+    }
+    yield* super.buildContexts(document, position);
   }
 
   protected override completionFor(context: CompletionContext, next: NextFeature, acceptor: CompletionAcceptor): MaybePromise<void> {
@@ -34,6 +54,13 @@ export class QvtoCompletionProvider extends DefaultCompletionProvider {
     const typeOwners = ['SimpleType', 'ObjectExpression', 'NewExpression', 'TypeFilterExpression', 'ResolveTarget'];
     const inType = (inName && typeOwners.includes(owner)) || (property === 'names' && (rule === 'MappingDeclaration' || rule === 'HelperDeclaration'));
 
+    // the nsURI of a registered metamodel after `uses`, with its quotes
+    if (property === 'uris' && rule === 'ModeltypeDeclaration') {
+      for (const nsURI of this.bridge.nsURIs) {
+        const label = `'${nsURI}'`;
+        acceptor(context, { label, kind: CompletionItemKind.Module, detail: this.bridge.packageOf(nsURI)?.getName() ?? undefined, sortText: '0' + nsURI });
+      }
+    }
     // a modeltype alias after `in`/`out` in a model parameter
     if (unit && property === 'modeltype' && rule === 'ModelParameter') {
       for (const m of unit.modeltypes) acceptor(context, { label: m.name, kind: CompletionItemKind.Module, detail: m.uris.join(', '), sortText: '0' + m.name });

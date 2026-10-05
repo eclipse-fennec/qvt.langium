@@ -2,11 +2,16 @@
  * The QVT-O language server as a Web Worker.
  *
  * Speaks LSP over the worker's message port (JSON-RPC via
- * BrowserMessageReader/Writer, as an LSP client expects), and beside it one
- * custom message: `{ type: 'registerPackage', data: '<ecore xmi>' }` puts a
- * metamodel into the language's EMF bridge, so classes and features of that
- * package are known to validation, completion and hover. The same shape as
- * @emfts/ocl.lsp.worker, so a client written for one drives the other.
+ * BrowserMessageReader/Writer, as an LSP client expects). Metamodels come in
+ * as the notification `emfts/registerPackage` with `{ xmi: '<ecore xmi>' }`,
+ * and leave with `emfts/unregisterPackage` and `{ nsURI }`: the classes and
+ * features of a registered package are then known to validation, completion
+ * and hover, and open documents are validated again.
+ *
+ * The raw message `{ type: 'registerPackage', data: '<ecore xmi>' }` of
+ * @emfts/ocl.lsp.worker is understood too, so a client written for one
+ * drives the other — but the JSON-RPC reader sees that message as well and
+ * logs it as malformed, which the notification avoids.
  */
 import { EmptyFileSystem } from 'langium';
 import { startLanguageServer } from 'langium/lsp';
@@ -40,15 +45,34 @@ function deserializeEPackage(xmi: string): EPackage | undefined {
   }
 }
 
+/** Open documents are validated again — with the classes the new package brought, or without those it took */
+function revalidate(): void {
+  const uris = shared.workspace.LangiumDocuments.all.map((d) => d.uri).toArray();
+  if (uris.length) void shared.workspace.DocumentBuilder.update(uris, []);
+}
+
+function register(xmi: string): void {
+  const pkg = deserializeEPackage(xmi);
+  if (pkg) { qvto.emfBridge.registerPackage(pkg); revalidate(); }
+}
+
+function unregister(nsURI: string): void {
+  qvto.emfBridge.unregisterPackage(nsURI);
+  revalidate();
+}
+
+connection.onNotification('emfts/registerPackage', (params: { xmi?: unknown }) => {
+  if (typeof params?.xmi === 'string') register(params.xmi);
+});
+connection.onNotification('emfts/unregisterPackage', (params: { nsURI?: unknown }) => {
+  if (typeof params?.nsURI === 'string') unregister(params.nsURI);
+});
+
 self.addEventListener('message', (event: MessageEvent<WorkerMessage>) => {
   const msg = event.data;
   if (!msg || typeof msg !== 'object' || !('type' in msg)) return;
-  if (msg.type === 'registerPackage' && typeof msg.data === 'string') {
-    const pkg = deserializeEPackage(msg.data);
-    if (pkg) qvto.emfBridge.registerPackage(pkg);
-  } else if (msg.type === 'unregisterPackage' && typeof msg.data === 'string') {
-    qvto.emfBridge.unregisterPackage(msg.data);
-  }
+  if (msg.type === 'registerPackage' && typeof msg.data === 'string') register(msg.data);
+  else if (msg.type === 'unregisterPackage' && typeof msg.data === 'string') unregister(msg.data);
 });
 
 startLanguageServer(shared);

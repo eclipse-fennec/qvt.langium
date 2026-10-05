@@ -56,6 +56,11 @@ export class QvtoEmfBridge {
     return [...this.packages.keys()];
   }
 
+  /** The registered package with that nsURI */
+  packageOf(nsURI: string): EPackage | undefined {
+    return this.packages.get(nsURI);
+  }
+
   /** `Person`, `library::Person` or `library.Person` */
   findClass(name: string): EClass | undefined {
     return this.classByName.get(name) ?? this.classByName.get(name.replace(/\./g, '::'));

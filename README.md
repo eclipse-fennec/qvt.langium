@@ -41,6 +41,15 @@ eines Mappings, Typen in `object`, `new`, Parametern und Filtern müssen es gebe
 sonst gibt es einen Fehler mit ähnlich geschriebenen Vorschlägen. Ein `modeltype`,
 dessen nsURI zu keinem Modell passt, wird angemerkt.
 
+## Vervollständigung und Hover
+
+Nach `uses` die nsURIs der registrierten Metamodelle mit Paketnamen, auch wenn das
+Anführungszeichen schon getippt ist; nach `in`/`out` die deklarierten modeltypes;
+nach `->map` die Mappings der Einheit; an Typstellen die Klassen; nach `self.` die
+Features der Kontextklasse; in Ausdrücken Helper und Klassen. Hover zeigt
+Mapping- und Helper-Signaturen, Klassen mit Features und Dokumentation, modeltypes
+mit ihren nsURIs.
+
 ## Benutzen
 
 ```ts
@@ -50,14 +59,19 @@ services().qvto.emfBridge.registerPackage(libraryPackage); // ein EPackage aus @
 const { unit, findings, hasErrors } = await parseQvto(text);
 ```
 
-Im Browser läuft der Worker als Language Server; Metamodelle kommen per
-Nachricht hinein:
+Im Browser läuft der Worker als Language Server; Metamodelle kommen als
+LSP-Notification hinein:
 
 ```ts
 const worker = new Worker(new URL('@emfts/qvto.lsp.worker', import.meta.url), { type: 'module' });
-worker.postMessage({ type: 'registerPackage', data: ecoreXmi });
-// danach LSP über den Message-Port, z. B. mit @codemirror/lsp-client oder monaco-languageclient
+// LSP über den Message-Port, z. B. mit @codemirror/lsp-client oder monaco-languageclient, dann:
+client.notification('emfts/registerPackage', { xmi: ecoreXmi });
+client.notification('emfts/unregisterPackage', { nsURI });
 ```
+
+Die rohe Nachricht `{ type: 'registerPackage', data: ecoreXmi }` des
+OCL-Workers wird ebenfalls verstanden; sie landet aber auch beim
+JSON-RPC-Leser und wird dort als fehlerhaft protokolliert.
 
 ## Entwickeln
 
