@@ -29,7 +29,7 @@
   "dependencies": {
     "@emfts/core": "0.3.0-next.4",
     "@emfts/qvt.langium": "0.0.1-next.1",
-    "langium": "^3.5.0",
+    "langium": "^4.4.0",
     "vscode-languageserver": "^9.0.1"
   },
   "devDependencies": {
