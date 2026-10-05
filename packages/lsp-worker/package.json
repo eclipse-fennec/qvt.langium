@@ -5,15 +5,40 @@
   "license": "EPL-2.0",
   "type": "module",
   "main": "dist/worker.js",
+  "module": "dist/worker.js",
   "types": "dist/worker.d.ts",
-  "exports": { ".": { "types": "./dist/worker.d.ts", "import": "./dist/worker.js" } },
-  "files": ["dist"],
-  "scripts": { "build": "tsc", "watch": "tsc --watch" },
+  "exports": {
+    ".": {
+      "types": "./dist/worker.d.ts",
+      "import": "./dist/worker.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "prepublishOnly": "npm run build"
+  },
   "dependencies": {
     "@emfts/core": "0.3.0-next.4",
     "@emfts/qvto.langium": "0.0.1-next.1",
     "langium": "^3.5.0",
     "vscode-languageserver": "^9.0.1"
   },
-  "devDependencies": { "typescript": "~5.9.2" }
+  "devDependencies": {
+    "typescript": "~5.9.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "emfts",
+    "qvto",
+    "qvt",
+    "langium",
+    "lsp",
+    "emf"
+  ]
 }

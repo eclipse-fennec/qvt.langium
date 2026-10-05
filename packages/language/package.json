@@ -5,14 +5,24 @@
   "license": "EPL-2.0",
   "type": "module",
   "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
-  "files": ["dist", "syntaxes"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "syntaxes"
+  ],
   "scripts": {
     "langium:generate": "langium generate",
     "build": "npm run langium:generate && tsc",
     "watch": "tsc --watch",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@emfts/core": "0.3.0-next.4",
@@ -25,5 +35,16 @@
     "langium-cli": "^3.5.0",
     "typescript": "~5.9.2",
     "vitest": "^3.2.4"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "emfts",
+    "qvto",
+    "qvt",
+    "langium",
+    "lsp",
+    "emf"
+  ]
 }
