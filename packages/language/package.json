@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
-    "langium-cli": "^3.5.0",
+    "langium-cli": "^4.4.0",
     "typescript": "~5.9.2",
     "vitest": "^3.2.4"
   },
